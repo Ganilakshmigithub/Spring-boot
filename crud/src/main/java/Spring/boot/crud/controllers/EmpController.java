@@ -1,8 +1,9 @@
 package Spring.boot.crud.controllers;
 
 import Spring.boot.crud.services.*;
-import Spring.boot.crud.entities.*;
-
+import Spring.boot.crud.dto.EmployeeDTO;
+import Spring.boot.crud.dto.PhoneNumberDTO;
+import Spring.boot.crud.entities.employees;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,15 @@ public class EmpController {
     Empservice es;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createEmployee(@RequestBody employees emp) {
-        Set<PhoneNumber> phoneNumbers = emp.getPhoneNumbers();
-        employees cemp = es.saveorUpdateEmp(emp, phoneNumbers);
+    public ResponseEntity<?> createEmployee(@RequestBody EmployeeDTO empDTO) {
+        Set<PhoneNumberDTO> phoneNumbers = empDTO.getPhoneNumbers();
+        employees cemp = es.saveorUpdateEmp(empDTO, phoneNumbers);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse(HttpStatus.CREATED.value(), "Employee data inserted successfully..", cemp));
     }
 
     @GetMapping("/get")
     public ResponseEntity<?> getAllEmployees(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3")int size) {
-        Page<employees> empPage = es.getAllEmp(page, size);
+        Page<EmployeeDTO> empPage = es.getAllEmp(page, size);
     
         ApiResponse apiResponse = new ApiResponse(
             HttpStatus.OK.value(),
@@ -42,19 +43,21 @@ public class EmpController {
     }
 
     @PutMapping("/update/{emp_id}/{Phnid}")
-    public ResponseEntity<?> updatePhn(@PathVariable int emp_id, @PathVariable long Phnid, @RequestBody PhoneNumber updatedPhn) {
-        employees emp = es.FindEmpById(emp_id);
-        if (emp == null) {
+    public ResponseEntity<?> updatePhn(@PathVariable int emp_id, @PathVariable long Phnid, @RequestBody PhoneNumberDTO updatedPhnDTO) {
+        EmployeeDTO empDTO = es.FindEmpById(emp_id);
+        if (empDTO == null) {
             return ResponseEntity.notFound().build();
         }
-        if (emp.getPhoneNumbers() == null || emp.getPhoneNumbers().isEmpty()) {
+        
+        if (empDTO.getPhoneNumbers() == null || empDTO.getPhoneNumbers().isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        for (PhoneNumber ps : emp.getPhoneNumbers()) {
-            if (ps.getId().equals(Phnid)) {
-                ps.setPhoneNumber(updatedPhn.getPhoneNumber());
-                es.saveorUpdateEmp(emp, emp.getPhoneNumbers());
-                return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse(HttpStatus.CREATED.value(), "Phone number updated", updatedPhn));
+        
+        for (PhoneNumberDTO phoneDTO : empDTO.getPhoneNumbers()) {
+            if (phoneDTO.getId().equals(Phnid)) {
+                phoneDTO.setPhoneNumber(updatedPhnDTO.getPhoneNumber());
+                es.saveorUpdateEmp(empDTO, empDTO.getPhoneNumbers());
+                return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse(HttpStatus.CREATED.value(), "Phone number updated", updatedPhnDTO));
             }
         }
         return ResponseEntity.notFound().build();
@@ -62,9 +65,9 @@ public class EmpController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> FindEmpById(@PathVariable int id) {
-        employees emp = es.FindEmpById(id);
-        if (emp != null) {
-            return ResponseEntity.ok().body(new ApiResponse(HttpStatus.OK.value(), "Employee retrieved by id", emp));
+        EmployeeDTO empDTO = es.FindEmpById(id);
+        if (empDTO != null) {
+            return ResponseEntity.ok().body(new ApiResponse(HttpStatus.OK.value(), "Employee retrieved by id", empDTO));
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -72,10 +75,10 @@ public class EmpController {
 
     @DeleteMapping("/del/{id}")
     public ResponseEntity<?> deleteEmp(@PathVariable int id) {
-        employees emp = es.FindEmpById(id);
-        if (emp != null) {
+        EmployeeDTO empDTO = es.FindEmpById(id);
+        if (empDTO != null) {
             es.deleteEmp(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse(HttpStatus.ACCEPTED.value(), "Employee successfully deleted by id", emp));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse(HttpStatus.ACCEPTED.value(), "Employee successfully deleted by id", empDTO));
         } else {
             return ResponseEntity.notFound().build();
         }

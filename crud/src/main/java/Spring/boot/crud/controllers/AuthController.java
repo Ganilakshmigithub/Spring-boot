@@ -1,6 +1,6 @@
 package Spring.boot.crud.controllers;
 
-import Spring.boot.crud.entities.User;
+import Spring.boot.crud.dto.UserDTO;
 import Spring.boot.crud.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,16 +18,16 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(
-            @RequestBody User user
-    ){
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse(HttpStatus.CREATED.value(), "user registerd successfully", user));
+    public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
+        UserDTO registeredUser = authService.registerUser(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse(HttpStatus.CREATED.value(), "User registered successfully", registeredUser));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user){
-        String token = authService.loginUser(user);
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(HttpStatus.OK.value(),"User logged in successfully", token));
+    public ResponseEntity<?> loginUser(@RequestBody UserDTO userDTO) {
+        String token = authService.loginUser(userDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse(HttpStatus.OK.value(), "User logged in successfully", token));
     }
-
 }

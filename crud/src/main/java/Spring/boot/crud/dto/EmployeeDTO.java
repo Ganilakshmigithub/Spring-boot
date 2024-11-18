@@ -7,15 +7,17 @@ public class EmployeeDTO {
     private int id;
     private String name;
     private Set<PhoneNumberDTO> phoneNumbers;
+    private String address;
+    private String designation;
+    private int salary;
 
-    // Constructors
-    public EmployeeDTO() {
-    }
-
-    public EmployeeDTO(int id, String name, Set<PhoneNumberDTO> phoneNumbers) {
-        this.id = id;
+    public EmployeeDTO(int id,String name, Set<PhoneNumberDTO> phoneNumbers, String address, String designation, int salary) {
+        this.id=id;
         this.name = name;
         this.phoneNumbers = phoneNumbers;
+        this.address = address;
+        this.designation = designation;
+        this.salary = salary;
     }
 
     // Getters and Setters
@@ -41,5 +43,29 @@ public class EmployeeDTO {
 
     public void setPhoneNumbers(Set<PhoneNumberDTO> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void setSalary(int salary) {
+        this.salary = salary;
     }
 }

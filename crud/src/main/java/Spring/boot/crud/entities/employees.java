@@ -27,6 +27,10 @@ public class employees {
     @JoinColumn(name = "employee_id")  //id of employees will be foregin key in phone numbers table
     private Set<PhoneNumber> phoneNumbers = new HashSet<>();
 
+    String address;
+    String designation;
+    int salary;
+
         
     public employees() {
     }
@@ -49,5 +53,23 @@ public class employees {
 
     public void setPhoneNumbers(Set<PhoneNumber> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
+    }
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    public String getDesignation() {
+        return designation;
+    }
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+    public int getSalary() {
+        return salary;
+    }
+    public void setSalary(int salary) {
+        this.salary = salary;
     }
     }    

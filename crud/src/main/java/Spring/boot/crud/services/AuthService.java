@@ -1,6 +1,7 @@
 package Spring.boot.crud.services;
 
 import Spring.boot.crud.entities.User;
+import Spring.boot.crud.dto.UserDTO;
 import Spring.boot.crud.repos.UserRepo;
 import Spring.boot.crud.security.JWTProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class AuthService {
@@ -25,37 +25,50 @@ public class AuthService {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    public User registerUser(User user){
-        if(user.getName()==null){
-            throw new BadCredentialsException("User Name Not Found");
-        }
-        if(user.getEmail()==null){
-            throw new BadCredentialsException("Email Not Found");
-        }
-        if(user.getPassword()==null){
-            throw new BadCredentialsException("Password Not Found");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepo.save(user);
+    // User to UserDTO
+    private UserDTO convertToDTO(User user) {
+        return new UserDTO(user.getName(), user.getEmail(), null);  
     }
 
-    public String loginUser(User user){
-        String email = user.getEmail();
-        String password = user.getPassword();
+    // UserDTO to User
+    private User convertToEntity(UserDTO userDTO) {
+        User user = new User();
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());  
+        return user;
+    }
+
+    public UserDTO registerUser(UserDTO userDTO) {
+        if (userDTO.getName() == null || userDTO.getEmail() == null || userDTO.getPassword() == null) {
+            throw new BadCredentialsException("Missing fields: name, email, or password");
+        }
+        User user = convertToEntity(userDTO);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        User savedUser = userRepo.save(user);
+        return convertToDTO(savedUser);
+    }
+
+
+    public String loginUser(UserDTO userDTO) {
+        String email = userDTO.getEmail();
+        String password = userDTO.getPassword();
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        if(userDetails == null){
-            throw new BadCredentialsException("Invalid UserName");
+        if (userDetails == null) {
+            throw new BadCredentialsException("Invalid Username");
         }
-        if(!passwordEncoder.matches(password, userDetails.getPassword())){
-            throw new BadCredentialsException("Password mismatch");
+
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("Invalid Password");
         }
-        Authentication auth = new UsernamePasswordAuthenticationToken(email,password);
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(email, password);
         return JWTProvider.generateJwtToken(auth);
     }
 
-    public User findByEmail(String email) {
-        return userRepo.findByEmail(email);
+    public UserDTO findByEmail(String email) {
+        User user = userRepo.findByEmail(email);
+        return user != null ? convertToDTO(user) : null;
     }
-
-
 }

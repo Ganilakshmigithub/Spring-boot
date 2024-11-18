@@ -5,7 +5,6 @@ public class PhoneNumberDTO {
     private Long id;
     private String phoneNumber;
 
-    // Constructors
     public PhoneNumberDTO() {
     }
 
@@ -14,7 +13,6 @@ public class PhoneNumberDTO {
         this.phoneNumber = phoneNumber;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
