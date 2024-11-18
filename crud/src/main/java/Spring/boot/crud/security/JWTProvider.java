@@ -17,7 +17,7 @@ public class JWTProvider {
         return Jwts.builder()
                 .setSubject(auth.getName())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + 86400000))
+                .setExpiration(new Date(new Date().getTime() + 432000000))
                 .signWith(key)
                 .compact();
     }

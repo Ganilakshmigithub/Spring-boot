@@ -23,7 +23,7 @@ public class employees {
     int id;
     String name;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch =FetchType.EAGER,orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL,fetch =FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "employee_id")  //id of employees will be foregin key in phone numbers table
     private Set<PhoneNumber> phoneNumbers = new HashSet<>();
 

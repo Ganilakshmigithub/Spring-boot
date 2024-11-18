@@ -26,7 +26,7 @@ public class EmpController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<?> getAllEmployees(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<?> getAllEmployees(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3")int size) {
         Page<employees> empPage = es.getAllEmp(page, size);
     
         ApiResponse apiResponse = new ApiResponse(
