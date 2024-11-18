@@ -4,6 +4,8 @@ import Spring.boot.crud.services.*;
 import Spring.boot.crud.dto.EmployeeDTO;
 import Spring.boot.crud.dto.PhoneNumberDTO;
 import Spring.boot.crud.entities.employees;
+
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +74,17 @@ public class EmpController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/get/bydesignation/{designation}")
+    public ResponseEntity<?> FindEmpByDesignation(@PathVariable String designation) {
+        List<EmployeeDTO> empDTOList = es.FindEmpByDesignation(designation);  
+        if (empDTOList != null && !empDTOList.isEmpty()) {
+            return ResponseEntity.ok().body(new ApiResponse(HttpStatus.OK.value(), "Employees retrieved by designation", empDTOList));
+        } else {
+            return ResponseEntity.notFound().build();  
+        }
+    }
+    
 
     @DeleteMapping("/del/{id}")
     public ResponseEntity<?> deleteEmp(@PathVariable int id) {

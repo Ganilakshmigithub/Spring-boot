@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -64,13 +65,17 @@ public class Empservice {
        return null;
        }
 
-    public EmployeeDTO FindEmpByDesignation(String designation) {
-        employees emp=er.findByDesignation(designation);
-        if (emp != null) {
-            return convertToDTO(emp);
-            }
-            return null;
-            }
+       public List<EmployeeDTO> FindEmpByDesignation(String designation) {
+        List<employees> employeesList = er.findByDesignation(designation);
+        if (employeesList != null && !employeesList.isEmpty()) {
+            // Convert List of employees to List of EmployeeDTO
+            return employeesList.stream()
+                    .map(this::convertToDTO)
+                    .collect(Collectors.toList());
+        }
+        return null;  
+    }
+    
 
     public void deleteEmp(int id) {
         er.deleteById(id);
