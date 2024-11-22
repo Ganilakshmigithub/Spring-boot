@@ -1,6 +1,6 @@
 package com.jwt_security_project.controller;
 
-import com.jwt_security_project.model.AppUser;
+import com.jwt_security_project.dtos.AppUserDTO;
 import com.jwt_security_project.model.JwtResponse;
 import com.jwt_security_project.model.LoginRequest;
 import com.jwt_security_project.service.AppUserService;
@@ -21,7 +21,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody AppUser user) {
+    public String register(@RequestBody AppUserDTO user) {
         appUserService.registerUser(user);
         return "User registered successfully";
     }

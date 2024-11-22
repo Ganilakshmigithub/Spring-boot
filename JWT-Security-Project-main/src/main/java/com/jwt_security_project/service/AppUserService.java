@@ -1,5 +1,6 @@
 package com.jwt_security_project.service;
 
+import com.jwt_security_project.dtos.AppUserDTO;
 import com.jwt_security_project.model.AppUser;
 import com.jwt_security_project.repository.AppUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,8 +16,21 @@ public class AppUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public AppUser registerUser(AppUser user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return appUserRepository.save(user);
+    // Converts AppUserDTO to AppUser entity
+    private AppUser convertToEntity(AppUserDTO userDTO) {
+        AppUser appUser = new AppUser();
+        appUser.setUsername(userDTO.getUsername());
+        appUser.setPassword(userDTO.getPassword()); 
+        appUser.setRole(userDTO.getRole());
+        return appUser;
+    }
+
+    // Registers a user by encoding the password and saving the AppUser entity to the database
+    public AppUser registerUser(AppUserDTO userDTO) {
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        
+        // Convert the DTO to entity
+        AppUser appUser = convertToEntity(userDTO);
+        return appUserRepository.save(appUser);
     }
 }

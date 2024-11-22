@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jwt_security_project.model.employee;
+import com.jwt_security_project.dtos.EmployeeDTO;
 import com.jwt_security_project.service.EmpService;
 
 @RestController
@@ -23,14 +23,14 @@ public class EmployeeController {
     }
  
     @PostMapping("/admin/create")
-    public employee createEmp(@RequestBody employee emp){
+    public EmployeeDTO createEmp(@RequestBody EmployeeDTO emp){
         return es.addEmployee(emp);
     }
 
 
     @GetMapping("/user/get")
-    public List<employee> getAllEmp(){
-        return es.getEmployee();
+    public List<EmployeeDTO> getAllEmp(){
+        return es.getEmployees();
     }
 
     @GetMapping("/user/dashboard")

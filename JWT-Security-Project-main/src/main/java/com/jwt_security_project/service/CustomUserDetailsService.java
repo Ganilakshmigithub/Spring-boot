@@ -1,5 +1,6 @@
 package com.jwt_security_project.service;
 
+import com.jwt_security_project.dtos.AppUserDTO;
 import com.jwt_security_project.model.AppUser;
 import com.jwt_security_project.repository.AppUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;

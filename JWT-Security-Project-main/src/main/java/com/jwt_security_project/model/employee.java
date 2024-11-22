@@ -1,8 +1,15 @@
 package com.jwt_security_project.model;
+import java.util.HashSet;
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class employee {
@@ -12,6 +19,9 @@ public class employee {
     private int id;
     String name;
     int age;
+    @OneToMany(cascade = CascadeType.ALL,fetch =FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "employee_id")  
+    Set<PhoneNumbers> phoneNumbers = new HashSet<>();
     public String getName() {
         return name;
     }
@@ -24,5 +34,18 @@ public class employee {
     public void setAge(int age) {
         this.age = age;
     }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public Set<PhoneNumbers> getPhoneNumbers() {
+        return phoneNumbers;
+    }
+    public void setPhoneNumbers(Set<PhoneNumbers> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
+    }
+    
     
 }
